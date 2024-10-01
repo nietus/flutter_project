@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'main_page.dart';
-import 'about_page.dart';
-import 'main.dart'; // Para referenciar LoginPage
+import 'home.dart';
+import 'login.dart'; // Para referenciar LoginPage
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});

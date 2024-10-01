@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'main_page.dart';
+import 'package:flutter_application/cadastro.dart';
+import 'home.dart';
 import 'about_page.dart';
-import 'cadastro.dart'; // Importa a tela de Cadastro
+import 'list.dart';  // Import the new list.dart file
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage(),  // Define a página inicial como LoginPage
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/list': (context) => const ListPage(),  // Named route for ListPage
+      },
     );
   }
 }
@@ -33,7 +38,30 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
   bool _rememberMe = false;
-  int _currentIndex = 2;  // Defina o índice inicial como 2 (Login)
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  int _currentIndex = 2;  // Set initial index as 2 (Login)
+
+  void _login(BuildContext context) {
+    if (_emailController.text == 'eumesmo@gmail.com' &&
+        _passwordController.text == '12345') {
+      Navigator.of(context).pushNamed('/list', arguments: 'eumesmo');
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Dados inválidos'),
+          content: const Text('Usuário e/ou senha incorreto(a)'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +94,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // Campo de Email com largura limitada
                 SizedBox(
-                  width: 350, // Defina uma largura máxima para os campos de texto
+                  width: 350,
                   child: TextField(
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: 'Email Address',
@@ -81,10 +109,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Campo de Senha com largura limitada
                 SizedBox(
                   width: 350,
                   child: TextField(
+                    controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -106,7 +134,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Checkbox de Lembrar Senha com largura limitada
                 SizedBox(
                   width: 350,
                   child: CheckboxListTile(
@@ -121,16 +148,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Botão de Login com largura limitada
                 SizedBox(
                   width: 350,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Substitui a página de login pela MainPage
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const MainPage()),
-                      );
-                    },
+                    onPressed: () => _login(context),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
@@ -145,7 +166,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Botão de Sign Up com largura limitada
                 SizedBox(
                   width: 350,
                   child: TextButton(
@@ -170,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,  // Atualiza o índice corretamente
+        currentIndex: _currentIndex,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -191,7 +211,6 @@ class _LoginPageState extends State<LoginPage> {
           });
 
           if (index == 0) {
-            // Substitui a tela atual pela MainPage
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const MainPage()),
             );
@@ -200,7 +219,6 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(builder: (context) => const AboutPage()),
             );
           } else if (index == 2) {
-            // Ao clicar em login, ele reinicializa o MyApp (retornando à LoginPage)
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const MyApp()),
             );
